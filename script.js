@@ -6,7 +6,7 @@ function salvar() {
   let n2 = Number(document.getElementById('n2').value);
   let n3 = Number(document.getElementById('n3').value);
   let a1 = new Aluno(nome, n1, n2, n3);
-  let m = a1.gerarMedia(n1, n2, n3);
+  let m = a1.gerarMedia();
   a1.gerarEstado(m);
   turma[turma.length] = a1;
   alert('aluno cadastrado');
