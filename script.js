@@ -27,11 +27,19 @@ function listar() {
   for (let i = 0; i < turma.length; i++) {
     lista =
       lista +
+      'Nome: ' +
       turma[i].nome +
-      ' - ' +
-      turma[i].media +
-      ' - ' +
+      ' - Média: ' +
+      turma[i].media.toFixed(2) +
+      ' - Nota 1: ' +
+      turma[i].getNota1 +
+      ' - Nota 2: ' +
+      turma[i].getNota2 +
+      ' - Nota 3: ' +
+      turma[i].getNota3 +
+      ' - Situação: ' +
       turma[i].estado +
+      
       '<br>';
   }
   document.getElementById('alunos').innerHTML = lista;
