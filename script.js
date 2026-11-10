@@ -30,7 +30,7 @@ function listar() {
       'Nome: ' +
       turma[i].nome +
       ' - Média: ' +
-      turma[i].media.toFixed(2) +
+      turma[i].getMedia.toFixed(2) +
       ' - Nota 1: ' +
       turma[i].getNota1 +
       ' - Nota 2: ' +

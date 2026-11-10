@@ -20,6 +20,10 @@ class Aluno {
   get getNota3(){
     return this.#nota3;
   }
+  get getMedia(){
+    return this.#media;
+  }
+  
   set setNota1(nota){
     this.#nota1 = nota;
   }
@@ -31,7 +35,7 @@ class Aluno {
   }
   gerarMedia() {
     let m = (this.getNota1 + this.getNota2 + this.getNota3) / 3;
-    this.media = m;
+    this.#media = m;
     return m;
   }
   gerarEstado(media) {
