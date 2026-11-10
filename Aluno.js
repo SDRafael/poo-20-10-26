@@ -1,12 +1,13 @@
-class Aluno {
-  nome;
+class Aluno extends Pessoa{
+
   #nota1;
   #nota2;
   #nota3;
   estado;
   #media;
   constructor(nome, primeiraNota, segundaNota, terceiraNota) {
-    this.nome = nome;
+    super(nome, matricula);
+    
     this.setNota1 = primeiraNota;
     this.setNota2 = segundaNota
     this.setNota3 = terceiraNota;
