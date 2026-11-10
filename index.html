@@ -23,24 +23,50 @@
 
     <!-- Conteúdo da Aba 1: Cadastrar -->
     <div id="tab-cadastrar" class="tab-content active">
+
+      <h3>Cadastrar Turma</h3>
+    
+      Nome do curso:
+      <input id="nomeCurso" type="text" />
+    
+      Nome do professor:
+      <input id="nomeProfessor" type="text" />
+    
+      Matrícula do professor:
+      <input id="matriculaProfessor" type="text" />
+    
+      <button onclick="salvarTurma()" class="btn-salvar">
+        Cadastrar Turma
+      </button>
+    
+      <hr>
+    
+      <h3>Cadastrar Aluno</h3>
+    
       Nome:
       <input id="nome" type="text" />
     
       Matrícula:
       <input id="matricula" type="text" />
     
+      Turma:
+      <select id="turmaAluno">
+        <option value="">Cadastre uma turma primeiro</option>
+      </select>
+    
       Nota 1:
-      <input id="n1" type="number" />
+      <input id="n1" type="number" min="0" max="10" step="0.01" />
     
       Nota 2:
-      <input id="n2" type="number" />
+      <input id="n2" type="number" min="0" max="10" step="0.01" />
     
       Nota 3:
-      <input id="n3" type="number" />
+      <input id="n3" type="number" min="0" max="10" step="0.01" />
     
       <button onclick="salvar()" class="btn-salvar">
         Salvar Aluno
       </button>
+    
     </div>
 
     <!-- Conteúdo da Aba 2: Listar -->

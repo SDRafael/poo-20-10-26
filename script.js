@@ -1,5 +1,5 @@
-let turma = [];
-
+let turmas = [];
+let professores = [];
 function salvar() {
     const nome = document.getElementById('nome').value.trim();
 
