@@ -1,15 +1,28 @@
 let turmas = [];
 let professores = [];
+
 function salvar() {
-    const nome = document.getElementById('nome').value.trim();
+  const nome = document.getElementById('nome').value.trim();
 
   const matricula = document.getElementById('matricula').value.trim();
+
+  const turmaSelecionada = document.getElementById('turmaAluno').value;
 
   const n1 = document.getElementById('n1').value;
   const n2 = document.getElementById('n2').value;
   const n3 = document.getElementById('n3').value;
 
-  // Verifica campos obrigatórios
+  // Verifica se existem turmas
+  if (turmas.length === 0) {
+    alert("Cadastre uma turma antes de cadastrar alunos.");
+    return;
+  }
+
+  if (turmaSelecionada === "") {
+    alert("Selecione uma turma.");
+    return;
+  }
+
   if (!nome || !matricula || !n1 || !n2 || !n3) {
     alert("Preencha todos os campos.");
     return;
@@ -24,13 +37,15 @@ function salvar() {
   if (notas.some(nota =>
     !Number.isFinite(nota) || nota < 0 || nota > 10
   )) {
-    alert("As notas devem ser números entre 0 e 10.");
+    alert("As notas devem estar entre 0 e 10.");
     return;
   }
 
-  // Verifica se a matrícula já existe
-  const matriculaExiste = turma.some(aluno =>
-    aluno.getMatricula === matricula
+  // Verifica matrícula em todas as turmas
+  const matriculaExiste = turmas.some(turma =>
+    turma.alunos.some(aluno =>
+      aluno.getMatricula === matricula
+    )
   );
 
   if (matriculaExiste) {
@@ -39,8 +54,7 @@ function salvar() {
   }
 
   try {
-    // Instancia o objeto Aluno
-    const a1 = new Aluno(
+    const aluno = new Aluno(
       nome,
       matricula,
       nota1,
@@ -48,12 +62,15 @@ function salvar() {
       nota3
     );
 
-    // Calcula média e situação
-    const media = a1.gerarMedia();
+    const media = aluno.gerarMedia();
 
-    a1.gerarEstado(media);
+    aluno.gerarEstado(media);
 
-    turma.push(a1);
+    // Recupera a turma selecionada
+    const turma = turmas[Number(turmaSelecionada)];
+
+    // Adiciona o aluno à turma
+    turma.adicionarAluno(aluno);
 
     alert("Aluno cadastrado com sucesso!");
 
@@ -67,6 +84,7 @@ function salvar() {
     alert(erro.message);
   }
 }
+
 function salvarTurma() {
   const nomeCurso = document.getElementById('nomeCurso').value.trim();
 
@@ -127,28 +145,43 @@ function listar() {
   // Ajusta o conteúdo visível
   tabListar.classList.add('active');
   tabCadastrar.classList.remove('active');
-  let lista = ' ';
-  for (let i = 0; i < turma.length; i++) {
-    lista =
-      lista +
-      'Nome: ' +
-      turma[i].nome +
-      ' - Matrícula: ' +
-      turma[i].getMatricula +
-      ' - Média: ' +
-      turma[i].getMedia.toFixed(2) +
-      ' - Nota 1: ' +
-      turma[i].getNota1 +
-      ' - Nota 2: ' +
-      turma[i].getNota2 +
-      ' - Nota 3: ' +
-      turma[i].getNota3 +
-      ' - Situação: ' +
-      turma[i].estado +
-      
-      '<br>';
+  let lista = "";
+
+for (let i = 0; i < turmas.length; i++) {
+
+  lista +=
+    "<li><strong>Curso: " +
+    turmas[i].nomeCurso +
+    "</strong><br>";
+
+  lista +=
+    "Professor: " +
+    turmas[i].professor.nome +
+    "<br><br>";
+
+  const alunos = turmas[i].listarAlunos();
+
+  for (let j = 0; j < alunos.length; j++) {
+
+    lista +=
+      "Nome: " + alunos[j].nome +
+      " - Matrícula: " + alunos[j].getMatricula +
+      " - Média: " + alunos[j].getMedia.toFixed(2) +
+      " - Nota 1: " + alunos[j].getNota1 +
+      " - Nota 2: " + alunos[j].getNota2 +
+      " - Nota 3: " + alunos[j].getNota3 +
+      " - Situação: " + alunos[j].estado +
+      "<br><br>";
   }
-  document.getElementById('alunos').innerHTML = lista;
+
+  lista += "</li>";
+}
+
+if (turmas.length === 0) {
+  lista = "<li>Nenhuma turma cadastrada.</li>";
+}
+
+document.getElementById('alunos').innerHTML = lista;
 }
 
 function cadastrar() {
