@@ -5,7 +5,7 @@ class Aluno extends Pessoa{
   #nota3;
   estado;
   #media;
-  constructor(nome, primeiraNota, segundaNota, terceiraNota) {
+  constructor(nome,matricula, primeiraNota, segundaNota, terceiraNota) {
     super(nome, matricula);
     
     this.setNota1 = primeiraNota;

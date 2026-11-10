@@ -3,16 +3,16 @@ class Pessoa {
     #matricula;
   
     constructor(nome, matricula) {
-      if (!nome || !nome.trim()) {
+      if (!nome) {
         throw new Error("O nome é obrigatório.");
       }
   
-      if (!matricula || !matricula.trim()) {
+      if (!matricula) {
         throw new Error("A matrícula é obrigatória.");
       }
   
-      this.nome = nome.trim();
-      this.#matricula = matricula.trim();
+      this.nome = nome;
+      this.#matricula = matricula;
     }
   
     get getMatricula() {
