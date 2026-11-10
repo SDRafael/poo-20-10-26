@@ -67,6 +67,53 @@ function salvar() {
     alert(erro.message);
   }
 }
+function salvarTurma() {
+  const nomeCurso = document.getElementById('nomeCurso').value.trim();
+
+  const nomeProfessor = document.getElementById('nomeProfessor').value.trim();
+
+  const matriculaProfessor = document.getElementById('matriculaProfessor').value.trim();
+
+  if (!nomeCurso || !nomeProfessor || !matriculaProfessor) {
+    alert("Preencha todos os campos da turma.");
+    return;
+  }
+
+  try {
+    // Procura um professor já cadastrado
+    let professor = professores.find(
+      p => p.getMatricula === matriculaProfessor
+    );
+
+    if (!professor) {
+      professor = new Professor(
+        nomeProfessor,
+        matriculaProfessor
+      );
+
+      professores.push(professor);
+    }
+
+    // Cria a turma
+    const novaTurma = new Turma(
+      nomeCurso,
+      professor
+    );
+
+    turmas.push(novaTurma);
+
+    atualizarSelectTurmas();
+
+    alert("Turma cadastrada com sucesso!");
+
+    document.getElementById('nomeCurso').value = "";
+    document.getElementById('nomeProfessor').value = "";
+    document.getElementById('matriculaProfessor').value = "";
+
+  } catch (erro) {
+    alert(erro.message);
+  }
+}
 
 function listar() {
   const btnCadastrar = document.getElementById('btn-cadastrar');
@@ -117,4 +164,42 @@ function cadastrar() {
   tabListar.classList.remove('active');
   tabCadastrar.classList.add('active');
   //document.getElementById("media").innerHTML = m;
+}
+
+
+//função para atualizar o dropdown
+function atualizarSelectTurmas() {
+  const select = document.getElementById('turmaAluno');
+
+  select.replaceChildren();
+
+  if (turmas.length === 0) {
+    const option = document.createElement('option');
+
+    option.value = "";
+    option.textContent = "Nenhuma turma cadastrada";
+
+    select.appendChild(option);
+
+    return;
+  }
+
+  const primeiraOpcao = document.createElement('option');
+
+  primeiraOpcao.value = "";
+  primeiraOpcao.textContent = "Selecione uma turma";
+
+  select.appendChild(primeiraOpcao);
+
+  turmas.forEach((turma, index) => {
+    const option = document.createElement('option');
+
+    option.value = index;
+
+    option.textContent =
+      turma.nomeCurso + " - " +
+      turma.professor.nome;
+
+    select.appendChild(option);
+  });
 }
