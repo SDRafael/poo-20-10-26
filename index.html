@@ -72,8 +72,24 @@
     <!-- Conteúdo da Aba 2: Listar -->
     <div id="tab-listar" class="tab-content">
       <h3>Alunos Cadastrados</h3>
+    
+      <label for="filtroTurma">Selecionar turma:</label>
+      <select id="filtroTurma" onchange="atualizarLista()">
+        <option value="todas">Todas as turmas</option>
+      </select>
+    
+      <label for="filtroAlunos">Filtrar e ordenar:</label>
+      <select id="filtroAlunos" onchange="atualizarLista()">
+        <option value="todos">Todos os alunos</option>
+        <option value="alfabetica">Ordem alfabética (A-Z)</option>
+        <option value="aprovados">Aprovados</option>
+        <option value="reprovados">Reprovados</option>
+        <option value="recuperacao">Em recuperação</option>
+        <option value="maiorMedia">Maior média para menor média</option>
+        <option value="menorMedia">Menor média para maior média</option>
+      </select>
+    
       <ul class="lista-alunos" id="alunos">
-        <!-- O JavaScript vai colocar os alunos aqui depois -->
         <li>Nenhum aluno cadastrado ainda.</li>
       </ul>
     </div>

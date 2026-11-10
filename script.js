@@ -132,7 +132,21 @@ function salvarTurma() {
     alert(erro.message);
   }
 }
+function cadastrar() {
+  const btnCadastrar = document.getElementById('btn-cadastrar');
+  const tabCadastrar = document.getElementById('tab-cadastrar');
 
+  const btnListar = document.getElementById('btn-listar');
+  const tabListar = document.getElementById('tab-listar');
+
+  // Ativa o botão de cadastro
+  btnCadastrar.classList.add('active');
+  btnListar.classList.remove('active');
+
+  // Exibe o conteúdo de cadastro
+  tabCadastrar.classList.add('active');
+  tabListar.classList.remove('active');
+}
 function listar() {
   const btnCadastrar = document.getElementById('btn-cadastrar');
   const tabCadastrar = document.getElementById('tab-cadastrar');
@@ -142,97 +156,178 @@ function listar() {
   btnListar.classList.add('active');
   btnCadastrar.classList.remove('active');
 
-  // Ajusta o conteúdo visível
   tabListar.classList.add('active');
   tabCadastrar.classList.remove('active');
-  let lista = "";
 
-for (let i = 0; i < turmas.length; i++) {
-
-  lista +=
-    "<li><strong>Curso: " +
-    turmas[i].nomeCurso +
-    "</strong><br>";
-
-  lista +=
-    "Professor: " +
-    turmas[i].professor.nome +
-    "<br><br>";
-
-  const alunos = turmas[i].listarAlunos();
-
-  for (let j = 0; j < alunos.length; j++) {
-
-    lista +=
-      "Nome: " + alunos[j].nome +
-      " - Matrícula: " + alunos[j].getMatricula +
-      " - Média: " + alunos[j].getMedia.toFixed(2) +
-      " - Nota 1: " + alunos[j].getNota1 +
-      " - Nota 2: " + alunos[j].getNota2 +
-      " - Nota 3: " + alunos[j].getNota3 +
-      " - Situação: " + alunos[j].estado +
-      "<br><br>";
-  }
-
-  lista += "</li>";
+  atualizarLista();
 }
 
-if (turmas.length === 0) {
-  lista = "<li>Nenhuma turma cadastrada.</li>";
-}
+function atualizarLista() {
+  const lista = document.getElementById('alunos');
 
-document.getElementById('alunos').innerHTML = lista;
-}
+  const filtroTurma = document.getElementById('filtroTurma').value;
+  const filtro = document.getElementById('filtroAlunos').value;
 
-function cadastrar() {
-  const btnCadastrar = document.getElementById('btn-cadastrar');
-  const tabCadastrar = document.getElementById('tab-cadastrar');
-  const btnListar = document.getElementById('btn-listar');
-  const tabListar = document.getElementById('tab-listar');
+  // Limpa a listagem anterior
+  lista.replaceChildren();
 
-  btnListar.classList.remove('active');
-  btnCadastrar.classList.add('active');
-
-  // Ajusta o conteúdo visível
-  tabListar.classList.remove('active');
-  tabCadastrar.classList.add('active');
-  //document.getElementById("media").innerHTML = m;
-}
-
-
-//função para atualizar o dropdown
-function atualizarSelectTurmas() {
-  const select = document.getElementById('turmaAluno');
-
-  select.replaceChildren();
-
+  // Verifica se existem turmas
   if (turmas.length === 0) {
-    const option = document.createElement('option');
-
-    option.value = "";
-    option.textContent = "Nenhuma turma cadastrada";
-
-    select.appendChild(option);
-
+    const item = document.createElement('li');
+    item.textContent = "Nenhuma turma cadastrada.";
+    lista.appendChild(item);
     return;
   }
 
-  const primeiraOpcao = document.createElement('option');
-
-  primeiraOpcao.value = "";
-  primeiraOpcao.textContent = "Selecione uma turma";
-
-  select.appendChild(primeiraOpcao);
-
+  // Percorre as turmas
   turmas.forEach((turma, index) => {
-    const option = document.createElement('option');
 
-    option.value = index;
+    // Verifica se a turma deve ser exibida
+    if (filtroTurma !== "todas" &&
+        Number(filtroTurma) !== index) {
+      return;
+    }
 
-    option.textContent =
-      turma.nomeCurso + " - " +
-      turma.professor.nome;
+    // Recupera os alunos da turma
+    let alunos = [...turma.listarAlunos()];
 
-    select.appendChild(option);
+    // Aplica o filtro selecionado
+    switch (filtro) {
+      case "aprovados":
+        alunos = alunos.filter(aluno =>
+          aluno.estado === "Aprovado"
+        );
+        break;
+
+      case "reprovados":
+        alunos = alunos.filter(aluno =>
+          aluno.estado === "Reprovado"
+        );
+        break;
+
+      case "recuperacao":
+        alunos = alunos.filter(aluno =>
+          aluno.estado === "Recuperação"
+        );
+        break;
+
+      case "alfabetica":
+        alunos.sort((a, b) =>
+          a.nome.localeCompare(b.nome, 'pt-BR')
+        );
+        break;
+
+      case "maiorMedia":
+        alunos.sort((a, b) =>
+          b.getMedia - a.getMedia
+        );
+        break;
+
+      case "menorMedia":
+        alunos.sort((a, b) =>
+          a.getMedia - b.getMedia
+        );
+        break;
+    }
+
+    // Cria o título da turma
+    const itemTurma = document.createElement('li');
+
+    const titulo = document.createElement('strong');
+    titulo.textContent = "Curso: " + turma.nomeCurso;
+
+    itemTurma.appendChild(titulo);
+    itemTurma.appendChild(document.createElement('br'));
+
+    const professor = document.createElement('span');
+    professor.textContent =
+      "Professor: " + turma.professor.nome;
+
+    itemTurma.appendChild(professor);
+
+    // Cria uma lista interna de alunos
+    const listaInterna = document.createElement('ul');
+
+    if (alunos.length === 0) {
+      const vazio = document.createElement('li');
+      vazio.textContent = "Nenhum aluno encontrado.";
+      listaInterna.appendChild(vazio);
+    }
+
+    alunos.forEach(aluno => {
+      const itemAluno = document.createElement('li');
+
+      itemAluno.textContent =
+        "Nome: " + aluno.nome +
+        " - Matrícula: " + aluno.getMatricula +
+        " - Média: " + aluno.getMedia.toFixed(2) +
+        " - Nota 1: " + aluno.getNota1 +
+        " - Nota 2: " + aluno.getNota2 +
+        " - Nota 3: " + aluno.getNota3 +
+        " - Situação: " + aluno.estado;
+
+      listaInterna.appendChild(itemAluno);
+    });
+
+    itemTurma.appendChild(listaInterna);
+    lista.appendChild(itemTurma);
   });
 }
+
+function atualizarSelectTurmas() {
+  // Seletor utilizado no cadastro de alunos
+  const selectCadastro = document.getElementById('turmaAluno');
+
+  // Seletor utilizado na listagem
+  const selectLista = document.getElementById('filtroTurma');
+
+  // Atualiza o seletor de cadastro
+  selectCadastro.replaceChildren();
+
+  const opcaoCadastro = document.createElement('option');
+  opcaoCadastro.value = "";
+  opcaoCadastro.textContent = turmas.length === 0
+    ? "Nenhuma turma cadastrada"
+    : "Selecione uma turma";
+
+  selectCadastro.appendChild(opcaoCadastro);
+
+  // Atualiza o seletor de listagem
+  const valorAnterior = selectLista.value;
+
+  selectLista.replaceChildren();
+
+  const opcaoTodas = document.createElement('option');
+  opcaoTodas.value = "todas";
+  opcaoTodas.textContent = "Todas as turmas";
+
+  selectLista.appendChild(opcaoTodas);
+
+  turmas.forEach((turma, index) => {
+    // Opção para o cadastro
+    const opcaoCadastro = document.createElement('option');
+
+    opcaoCadastro.value = index;
+    opcaoCadastro.textContent =
+      turma.nomeCurso + " - " + turma.professor.nome;
+
+    selectCadastro.appendChild(opcaoCadastro);
+
+    // Opção para a listagem
+    const opcaoLista = document.createElement('option');
+
+    opcaoLista.value = index;
+    opcaoLista.textContent =
+      turma.nomeCurso + " - " + turma.professor.nome;
+
+    selectLista.appendChild(opcaoLista);
+  });
+
+  // Mantém a seleção anterior, se ela ainda existir
+  if ([...selectLista.options].some(
+    option => option.value === valorAnterior
+  )) {
+    selectLista.value = valorAnterior;
+  }
+}
+
