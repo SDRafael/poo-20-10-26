@@ -69,7 +69,6 @@ function salvar() {
     // Recupera a turma selecionada
     const turma = turmas[Number(turmaSelecionada)];
 
-    // Adiciona o aluno à turma
     turma.adicionarAluno(aluno);
 
     alert("Aluno cadastrado com sucesso!");
@@ -112,7 +111,6 @@ function salvarTurma() {
       professores.push(professor);
     }
 
-    // Cria a turma
     const novaTurma = new Turma(
       nomeCurso,
       professor
@@ -168,7 +166,6 @@ function atualizarLista() {
   const filtroTurma = document.getElementById('filtroTurma').value;
   const filtro = document.getElementById('filtroAlunos').value;
 
-  // Limpa a listagem anterior
   lista.replaceChildren();
 
   // Verifica se existem turmas
@@ -275,10 +272,8 @@ function atualizarLista() {
 }
 
 function atualizarSelectTurmas() {
-  // Seletor utilizado no cadastro de alunos
   const selectCadastro = document.getElementById('turmaAluno');
 
-  // Seletor utilizado na listagem
   const selectLista = document.getElementById('filtroTurma');
 
   // Atualiza o seletor de cadastro
@@ -304,7 +299,6 @@ function atualizarSelectTurmas() {
   selectLista.appendChild(opcaoTodas);
 
   turmas.forEach((turma, index) => {
-    // Opção para o cadastro
     const opcaoCadastro = document.createElement('option');
 
     opcaoCadastro.value = index;
