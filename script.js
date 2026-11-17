@@ -192,36 +192,41 @@ function listar() {
   atualizarLista();
 }
 
+
 function atualizarLista() {
-  const lista = document.getElementById('alunos');
+  const listaTurmas = document.getElementById('listaTurmas');
 
   const filtroTurma = document.getElementById('filtroTurma').value;
   const filtro = document.getElementById('filtroAlunos').value;
 
-  lista.replaceChildren();
+  // Limpa as tabelas anteriores
+  listaTurmas.replaceChildren();
 
-  // Verifica se existem turmas
+  // Verifica se existem turmas cadastradas
   if (turmas.length === 0) {
-    const item = document.createElement('li');
-    item.textContent = "Nenhuma turma cadastrada.";
-    lista.appendChild(item);
+    listaTurmas.textContent = "Nenhuma turma cadastrada.";
     return;
   }
 
-  // Percorre as turmas
+  let encontrouTurma = false;
+
+  // Percorre todas as turmas
   turmas.forEach((turma, index) => {
 
-    // Verifica se a turma deve ser exibida
-    if (filtroTurma !== "todas" &&
-        Number(filtroTurma) !== index) {
+    // Aplica o filtro de turma
+    if (
+      filtroTurma !== "todas" &&
+      Number(filtroTurma) !== index
+    ) {
       return;
     }
 
     // Recupera os alunos da turma
     let alunos = [...turma.listarAlunos()];
 
-    // Aplica o filtro selecionado
+    // Aplica os filtros dos alunos
     switch (filtro) {
+
       case "aprovados":
         alunos = alunos.filter(aluno =>
           aluno.estado === "Aprovado"
@@ -259,49 +264,131 @@ function atualizarLista() {
         break;
     }
 
-    // Cria o título da turma
-    const itemTurma = document.createElement('li');
+    encontrouTurma = true;
 
-    const titulo = document.createElement('strong');
-    titulo.textContent = "Curso: " + turma.nomeCurso;
+    // =====================================
+    // CRIA O CONTAINER DE CADA TURMA
+    // =====================================
 
-    itemTurma.appendChild(titulo);
-    itemTurma.appendChild(document.createElement('br'));
+    const container = document.createElement('div');
+    container.classList.add('turma-card');
 
-    const professor = document.createElement('span');
+    // Título da turma
+    const titulo = document.createElement('h3');
+    titulo.textContent = turma.nomeCurso;
+
+    // Nome do professor
+    const professor = document.createElement('p');
+    professor.classList.add('professor-turma');
     professor.textContent =
       "Professor: " + turma.professor.nome;
 
-    itemTurma.appendChild(professor);
+    container.appendChild(titulo);
+    container.appendChild(professor);
 
-    // Cria uma lista interna de alunos
-    const listaInterna = document.createElement('ul');
+    // =====================================
+    // CRIA UMA TABELA PARA CADA TURMA
+    // =====================================
 
-    if (alunos.length === 0) {
-      const vazio = document.createElement('li');
-      vazio.textContent = "Nenhum aluno encontrado.";
-      listaInterna.appendChild(vazio);
-    }
+    const tabelaContainer = document.createElement('div');
+    tabelaContainer.classList.add('tabela-container');
 
-    alunos.forEach(aluno => {
-      const itemAluno = document.createElement('li');
+    const tabela = document.createElement('table');
+    tabela.classList.add('tabela-alunos');
 
-      itemAluno.textContent =
-        "Nome: " + aluno.nome +
-        " - Matrícula: " + aluno.getMatricula +
-        " - Média: " + aluno.getMedia.toFixed(2) +
-        " - Nota 1: " + aluno.getNota1 +
-        " - Nota 2: " + aluno.getNota2 +
-        " - Nota 3: " + aluno.getNota3 +
-        " - Situação: " + aluno.estado;
+    // Cabeçalho
+    const cabecalho = document.createElement('thead');
+    const linhaCabecalho = document.createElement('tr');
 
-      listaInterna.appendChild(itemAluno);
+    const colunas = [
+      "Nome",
+      "Matrícula",
+      "Nota 1",
+      "Nota 2",
+      "Nota 3",
+      "Média",
+      "Situação"
+    ];
+
+    colunas.forEach(coluna => {
+      const th = document.createElement('th');
+      th.textContent = coluna;
+      linhaCabecalho.appendChild(th);
     });
 
-    itemTurma.appendChild(listaInterna);
-    lista.appendChild(itemTurma);
+    cabecalho.appendChild(linhaCabecalho);
+    tabela.appendChild(cabecalho);
+
+    // Corpo da tabela
+    const corpo = document.createElement('tbody');
+
+    if (alunos.length === 0) {
+      const linha = document.createElement('tr');
+      const celula = document.createElement('td');
+
+      celula.colSpan = 7;
+      celula.textContent = "Nenhum aluno encontrado.";
+      celula.style.textAlign = "center";
+
+      linha.appendChild(celula);
+      corpo.appendChild(linha);
+
+    } else {
+
+      alunos.forEach(aluno => {
+
+        const linha = document.createElement('tr');
+
+        const dados = [
+          aluno.nome,
+          aluno.getMatricula,
+          aluno.getNota1,
+          aluno.getNota2,
+          aluno.getNota3,
+          Number(aluno.getMedia).toFixed(2),
+          aluno.estado
+        ];
+
+        dados.forEach((dado, indice) => {
+
+          const td = document.createElement('td');
+          td.textContent = dado;
+
+          // Colore a situação do aluno
+          if (indice === 6) {
+            if (aluno.estado === "Aprovado") {
+              td.classList.add('aprovado');
+
+            } else if (aluno.estado === "Reprovado") {
+              td.classList.add('reprovado');
+
+            } else if (aluno.estado === "Recuperação") {
+              td.classList.add('recuperacao');
+            }
+          }
+
+          linha.appendChild(td);
+        });
+
+        corpo.appendChild(linha);
+      });
+    }
+
+    tabela.appendChild(corpo);
+
+    tabelaContainer.appendChild(tabela);
+    container.appendChild(tabelaContainer);
+
+    // Adiciona a tabela da turma à página
+    listaTurmas.appendChild(container);
   });
+
+  // Caso nenhuma turma corresponda ao filtro
+  if (!encontrouTurma) {
+    listaTurmas.textContent = "Nenhuma turma encontrada.";
+  }
 }
+
 
 function atualizarSelectTurmas() {
   const selectCadastro = document.getElementById('turmaAluno');
