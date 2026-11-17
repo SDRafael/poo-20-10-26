@@ -130,32 +130,64 @@ function salvarTurma() {
     alert(erro.message);
   }
 }
-function cadastrar() {
-  const btnCadastrar = document.getElementById('btn-cadastrar');
-  const tabCadastrar = document.getElementById('tab-cadastrar');
+function cadastrarTurma() {
+  const btnCadastrarTurma = document.getElementById('btn-cadastrarTurma');
+  const btnCadastrarAluno = document.getElementById('btn-cadastrarAluno');
+
+  const tabCadastrarTurma = document.getElementById('tab-cadastrarTurma');
+  const tabCadastrarAluno = document.getElementById('tab-cadastrarAluno');
+  
 
   const btnListar = document.getElementById('btn-listar');
   const tabListar = document.getElementById('tab-listar');
 
   // Ativa o botão de cadastro
-  btnCadastrar.classList.add('active');
+  btnCadastrarTurma.classList.add('active');
   btnListar.classList.remove('active');
+  btnCadastrarAluno.classList.remove('active');
 
   // Exibe o conteúdo de cadastro
-  tabCadastrar.classList.add('active');
+  tabCadastrarTurma.classList.add('active');
+  tabCadastrarAluno.classList.remove('active');
+  tabListar.classList.remove('active');
+}
+function cadastrarAluno() {
+  const btnCadastrarTurma = document.getElementById('btn-cadastrarTurma');
+  const btnCadastrarAluno = document.getElementById('btn-cadastrarAluno');
+
+  const tabCadastrarTurma = document.getElementById('tab-cadastrarTurma');
+  const tabCadastrarAluno = document.getElementById('tab-cadastrarAluno');
+
+
+  const btnListar = document.getElementById('btn-listar');
+  const tabListar = document.getElementById('tab-listar');
+
+  // Ativa o botão de cadastro
+  btnCadastrarAluno.classList.add('active');
+  btnListar.classList.remove('active');
+  btnCadastrarTurma.classList.remove('active');
+
+  // Exibe o conteúdo de cadastro
+  tabCadastrarAluno.classList.add('active');
+  tabCadastrarTurma.classList.remove('active');
   tabListar.classList.remove('active');
 }
 function listar() {
-  const btnCadastrar = document.getElementById('btn-cadastrar');
-  const tabCadastrar = document.getElementById('tab-cadastrar');
+  const btnCadastrarTurma = document.getElementById('btn-cadastrarTurma');
+  const btnCadastrarAluno = document.getElementById('btn-cadastrarAluno');
+  
+  const tabCadastrarTurma = document.getElementById('tab-cadastrarTurma');
+  const tabCadastrarAluno = document.getElementById('tab-cadastrarAluno');
   const btnListar = document.getElementById('btn-listar');
   const tabListar = document.getElementById('tab-listar');
 
   btnListar.classList.add('active');
-  btnCadastrar.classList.remove('active');
+  btnCadastrarTurma.classList.remove('active');
+  btnCadastrarAluno.classList.remove('active');
 
   tabListar.classList.add('active');
-  tabCadastrar.classList.remove('active');
+  tabCadastrarTurma.classList.remove('active');
+  tabCadastrarAluno.classList.remove('active');
 
   atualizarLista();
 }

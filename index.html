@@ -9,17 +9,12 @@
   <body>
     <!-- Botões para trocar de aba -->
     <div class="tabs-container">
-      <button
-        class="tab-button active"
-        id="btn-cadastrar"
-        onclick="cadastrar()"
-      >Cadastrar</button>
+      <button class="tab-button active" id="btn-cadastrarTurma" onclick="cadastrarTurma()">Cadastrar Turma</button>
+      <button class="tab-button" id="btn-cadastrarAluno" onclick="cadastrarAluno()">Cadastrar Aluno</button>
       <button class="tab-button" id="btn-listar" onclick="listar()">Listar Alunos</button>
     </div>
-
-    <!-- Aba 1: Cadastrar -->
-    <div id="tab-cadastrar" class="tab-content active">
-
+    <!-- Aba 1: Cadastrar Turma-->
+    <div id="tab-cadastrarTurma" class="tab-content active">
       <h3>Cadastrar Turma</h3>
     
       Nome do curso:
@@ -34,9 +29,11 @@
       <button onclick="salvarTurma()" class="btn-salvar">
         Cadastrar Turma
       </button>
-    
-      <hr>
-    
+        
+    </div>
+    <!-- Aba 2: Cadastrar Aluno -->
+    <div id="tab-cadastrarAluno" class="tab-content active">
+
       <h3>Cadastrar Aluno</h3>
     
       Nome:
